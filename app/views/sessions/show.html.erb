@@ -1,0 +1,138 @@
+<div class="container">
+
+<h1>Hey <%= @active_user.first_name %>! Ready to party???</h1>
+<%= link_to "Log Out", '/sessions/destroy' %>
+
+<div id="in_state">
+  <table class="table table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Host</th>
+        <th>Action/Status</th>
+      </tr>
+    <% if @in_state %>
+    <% @in_state.each do |x| %>
+      <tr>
+        <td><a href="/events/<%= x.id %>/edit"><%= x.name %></a></td>
+        <td><%= x.date.strftime('%B %e, %Y') %></td>
+        <td><%= x.city %>, <%= x.state %></td>
+        <td><%= x.user.full_name %></td>
+        <% if x.user_id == session[:active] %>
+          <td><%= link_to "Edit", "/sessions/#{x.id}/edit" %> | <%= link_to "Delete", "/events/destroy/#{x.id}" %></td>
+        <% elsif x.is_attending?(session[:active]) %>
+          <td><p>You're attending this party <a href="/events/<%=x.id %>">| Cancel</a></p></td>
+        <% else %>
+          <td><%= link_to "Join", "/events/update/#{x.id}"%></td>
+        <% end %>
+      </tr>
+  <% end %>
+  </table>
+
+  <% end %>
+</div>
+<br>
+
+<div id="out_state">
+  <% if @out_state %>
+  <table class="table table-striped">
+    <tr>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Location</th>
+      <th>Host</th>
+      <th>Action/Status</th>
+    </tr>
+    <% @out_state.each do |x| %>
+    <tr>
+      <td><a href="/events/<%= x.id %>/edit"><%= x.name %></a></td>
+      <td><%= x.date.strftime('%B %e, %Y') %></td>
+      <td><%= x.city %>, <%= x.state %></td>
+      <td><%= x.user.full_name %></td>
+      <% if x.user_id == session[:active] %>
+        <td><%= link_to "Edit", "/sessions/#{x.id}/edit" %> | <%= link_to "Delete", "/events/destroy/#{x.id}" %></td>
+        <!-- is_attending method defined in event model -->
+      <% elsif x.is_attending?(session[:active]) %>
+        <td><p>You're attending this party <a href="/events/<%=x.id %>">| Cancel</a></p></td>
+      <% else %>
+        <td><%= link_to "Join", "/events/update/#{x.id}"%></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </table>
+  <% end %>
+</div>
+
+<br>
+<% (notice.kind_of?(Array) ? notice : [notice]).each do |x| %>
+  <p><%= x %></p>
+<% end %>
+
+<div id="add_event">
+  <form action="/events" method="post">
+    <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+    <label for="event_name">Name:</label>
+    <input type="text" name=event[name] id="event_name"><br>
+    <label for="date">Date:</label>
+    <input type="date" name=event[date] id="date"><br>
+    <label for="city">Location:</label>
+    <input type="text" id="city"name=event[city]>
+    <select name=event[state]>
+      <option value="AL">AL</option>
+      <option value="AK">AK</option>
+      <option value="AZ">AZ</option>
+      <option value="AR">AR</option>
+      <option value="CA">CA</option>
+      <option value="CO">CO</option>
+      <option value="CT">CT</option>
+      <option value="DE">DE</option>
+      <option value="DC">DC</option>
+      <option value="FL">FL</option>
+      <option value="GA">GA</option>
+      <option value="HI">HI</option>
+      <option value="ID">ID</option>
+      <option value="IL">IL</option>
+      <option value="IN">IN</option>
+      <option value="IA">IA</option>
+      <option value="KS">KS</option>
+      <option value="KY">KY</option>
+      <option value="LA">LA</option>
+      <option value="ME">ME</option>
+      <option value="MD">MD</option>
+      <option value="MA">MA</option>
+      <option value="MI">MI</option>
+      <option value="MN">MN</option>
+      <option value="MS">MS</option>
+      <option value="MO">MO</option>
+      <option value="MT">MT</option>
+      <option value="NE">NE</option>
+      <option value="NV">NV</option>
+      <option value="NH">NH</option>
+      <option value="NJ">NJ</option>
+      <option value="NM">NM</option>
+      <option value="NY">NY</option>
+      <option value="NC">NC</option>
+      <option value="ND">ND</option>
+      <option value="OH">OH</option>
+      <option value="OK">OK</option>
+      <option value="OR">OR</option>
+      <option value="PA">PA</option>
+      <option value="RI">RI</option>
+      <option value="SC">SC</option>
+      <option value="SD">SD</option>
+      <option value="TN">TN</option>
+      <option value="TX">TX</option>
+      <option value="UT">UT</option>
+      <option value="VT">VT</option>
+      <option value="VA">VA</option>
+      <option value="WA">WA</option>
+      <option value="WV">WV</option>
+      <option value="WI">WI</option>
+      <option value="WY">WY</option>
+    </select><br>
+    <input type="submit" class="btn btn-primary"value="Add Event">
+  </form>
+</div>
+
+</div>
