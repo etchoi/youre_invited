@@ -1,3 +1,48 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#my_container {
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background-color: #EEEEEE;
+}
+#my_navbar {
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  border-radius: 0;
+  text-align: right;
+}
+#my_navbar button {
+  margin: 1% 5% 1% 0;
+}
+
+#inner_container {
+  max-width: 70%;
+  margin: 0 auto;
+  margin-bottom: 20%;
+}
+#login {
+  text-align: right;
+  margin: 1% 20% 0 0;
+}
+#greeting {
+  max-width: 50%;
+  display: inline-block;
+}
+#register {
+  margin-top: 2%;
+  max-width: 30%;
+  float: right;
+}
+#city {
+  max-width: 72%;
+  display: inline-block;
+}
+#state {
+  max-width: 26%;
+  display: inline-block;
+}

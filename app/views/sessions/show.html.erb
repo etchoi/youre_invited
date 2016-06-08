@@ -1,84 +1,43 @@
+
+<nav id="my_navbar" class="navbar navbar-dark bg-primary">
+  <button type="submit" class="btn btn-secondary-outline"><%= link_to "Log Out", '/sessions/destroy' %></button>
+</nav>
+
 <div class="container">
+<h1 id="welcome_greeting">Welcome to your dashboard <%= @active_user.first_name %>!</h1>
 
-<h1>Hey <%= @active_user.first_name %>! Ready to party???</h1>
-<%= link_to "Log Out", '/sessions/destroy' %>
-
-<div id="in_state">
-  <table class="table table-striped">
-      <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Location</th>
-        <th>Host</th>
-        <th>Action/Status</th>
-      </tr>
-    <% if @in_state %>
-    <% @in_state.each do |x| %>
-      <tr>
-        <td><a href="/events/<%= x.id %>/edit"><%= x.name %></a></td>
-        <td><%= x.date.strftime('%B %e, %Y') %></td>
-        <td><%= x.city %>, <%= x.state %></td>
-        <td><%= x.user.full_name %></td>
-        <% if x.user_id == session[:active] %>
-          <td><%= link_to "Edit", "/sessions/#{x.id}/edit" %> | <%= link_to "Delete", "/events/destroy/#{x.id}" %></td>
-        <% elsif x.is_attending?(session[:active]) %>
-          <td><p>You're attending this party <a href="/events/<%=x.id %>">| Cancel</a></p></td>
-        <% else %>
-          <td><%= link_to "Join", "/events/update/#{x.id}"%></td>
-        <% end %>
-      </tr>
-  <% end %>
-  </table>
-
-  <% end %>
-</div>
-<br>
-
-<div id="out_state">
-  <% if @out_state %>
-  <table class="table table-striped">
+<div id="user_hosting">
+  <label for="in_state_table">Your Events</label>
+  <table class="table table-striped" id="in_state_table">
     <tr>
       <th>Name</th>
       <th>Date</th>
       <th>Location</th>
-      <th>Host</th>
       <th>Action/Status</th>
+      <th># Attending</th>
     </tr>
-    <% @out_state.each do |x| %>
-    <tr>
-      <td><a href="/events/<%= x.id %>/edit"><%= x.name %></a></td>
-      <td><%= x.date.strftime('%B %e, %Y') %></td>
-      <td><%= x.city %>, <%= x.state %></td>
-      <td><%= x.user.full_name %></td>
-      <% if x.user_id == session[:active] %>
-        <td><%= link_to "Edit", "/sessions/#{x.id}/edit" %> | <%= link_to "Delete", "/events/destroy/#{x.id}" %></td>
-        <!-- is_attending method defined in event model -->
-      <% elsif x.is_attending?(session[:active]) %>
-        <td><p>You're attending this party <a href="/events/<%=x.id %>">| Cancel</a></p></td>
-      <% else %>
-        <td><%= link_to "Join", "/events/update/#{x.id}"%></td>
+    <% if @user_parties %>
+      <% @user_parties.each do |y| %>
+        <tr>
+          <td><%= y.name %></td>
+          <td><%= y.date.strftime('%B %e, %Y')  %></td>
+          <td><%= y.city %>, <%= y.state %></td>
+          <td><%= link_to "Edit", "/sessions/#{y.id}/edit" %> | <%= link_to "Delete", "/events/destroy/#{y.id}" %></td>
+          <td><%= y.number_attending?(y.id) %></td>
+        </tr>
       <% end %>
-    </tr>
     <% end %>
   </table>
-  <% end %>
 </div>
-
-<br>
-<% (notice.kind_of?(Array) ? notice : [notice]).each do |x| %>
-  <p><%= x %></p>
-<% end %>
-
 <div id="add_event">
-  <form action="/events" method="post">
+  <label for="new_parties">Create a New Event</label>
+  <form id="new_parties" class="form-inline" action="/events" method="post">
     <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
-    <label for="event_name">Name:</label>
-    <input type="text" name=event[name] id="event_name"><br>
-    <label for="date">Date:</label>
-    <input type="date" name=event[date] id="date"><br>
-    <label for="city">Location:</label>
-    <input type="text" id="city"name=event[city]>
-    <select name=event[state]>
+    <input type="text" class="form-control" placeholder="Event Name" name=event[name] id="event_name">
+    <input type="date" class="form-control" placeholder="Date" name=event[date] id="date">
+    <input type="text" class="form-control" id="city" placeholder="City" name=event[city]>
+    <select class="form-control" name=event[state]>
+      <option value="">State</option>
       <option value="AL">AL</option>
       <option value="AK">AK</option>
       <option value="AZ">AZ</option>
@@ -131,8 +90,73 @@
       <option value="WI">WI</option>
       <option value="WY">WY</option>
     </select><br>
-    <input type="submit" class="btn btn-primary"value="Add Event">
+    <input type="submit" class="btn btn-primary btn-sm"value="Add Event">
   </form>
 </div>
+
+<div id="in_state">
+  <label for="in_state_table">In-State Events</label>
+  <table class="table table-striped" id="in_state_table">
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Host</th>
+        <th>Action/Status</th>
+      </tr>
+    <% if @in_state %>
+    <% @in_state.each do |x| %>
+      <tr>
+        <td><a href="/events/<%= x.id %>/edit"><%= x.name %></a></td>
+        <td><%= x.date.strftime('%B %e, %Y') %></td>
+        <td><%= x.city %>, <%= x.state %></td>
+        <td>
+          <%= x.user.full_name %>
+        </td>
+        <% if x.is_attending?(session[:active]) %>
+          <td><p>You're attending this party <a href="/events/<%=x.id %>">| Cancel</a></p></td>
+        <% else %>
+          <td><%= link_to "Join", "/events/update/#{x.id}"%></td>
+        <% end %>
+      </tr>
+  <% end %>
+  </table>
+  <% end %>
+</div>
+
+<div id="out_state">
+  <% if @out_state %>
+  <label for="out_state_table">Out of State Events</label>
+  <table class="table table-striped" id="out_state_table">
+    <tr>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Location</th>
+      <th>Host</th>
+      <th>Action/Status</th>
+    </tr>
+    <% @out_state.each do |x| %>
+    <tr>
+      <td><a href="/events/<%= x.id %>/edit"><%= x.name %></a></td>
+      <td><%= x.date.strftime('%B %e, %Y') %></td>
+      <td><%= x.city %>, <%= x.state %></td>
+      <td><%= x.user.full_name %></td>
+      <% if x.user_id == session[:active] %>
+        <td><%= link_to "Edit", "/sessions/#{x.id}/edit" %> | <%= link_to "Delete", "/events/destroy/#{x.id}" %></td>
+        <!-- is_attending method defined in event model -->
+      <% elsif x.is_attending?(session[:active]) %>
+        <td><p>You're attending this party <a href="/events/<%=x.id %>">| Cancel</a></p></td>
+      <% else %>
+        <td><%= link_to "Join", "/events/update/#{x.id}"%></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </table>
+  <% end %>
+</div>
+
+<% (notice.kind_of?(Array) ? notice : [notice]).each do |x| %>
+  <p><%= x %></p>
+<% end %>
 
 </div>

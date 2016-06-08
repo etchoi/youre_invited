@@ -1,48 +1,54 @@
-<div class="container">
-  
-<div class="top_row">
-  <h2><%= @event_info.name %></h2>
-  <%= link_to "Log Out", '/sessions/destroy' %> |
-  <%= link_to "Events Dashboard", "/sessions/#{@event_info.id}" %>
-</div>
+<nav id="event_navbar" class="navbar navbar-dark bg-primary">
+  <button type="button" class="btn btn-secondary-outline"><%= link_to "Log Out", '/sessions/destroy' %></button>
+  <button type="button" class="btn btn-secondary-outline"><%= link_to "Events Dashboard", "/sessions/#{@event_info.id}" %></button>
+</nav>
 
-<div class="event_info">
-  Hosted By: <%= @event_info.user.first_name %><br>
-  Party Date: <%= @event_info.date.strftime("%m/%d/%Y") %><br>
-  Location: <%= @event_info.city %>, <%= @event_info.state %><br>
-  Number of People Attending: <%= @event_count %>
+<div id="edit_container">
 
-  <h4>Who's attending?</h4>
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>City</th>
-      <th>State</th>
-    </tr>
-    <% @event_attendee.each do |x|%>
-    <tr>
-      <td><%= x.user.first_name %></td>
-      <td><%= x.user.city %></td>
-      <td><%= x.user.state %></td>
-    </tr>
-    <% end %>
-  </table>
-</div>
+  <div class="top_row">
+    <h2><%= @event_info.name %></h2>
+  </div>
 
-<div class="event_comments">
-  <% @event_comments.each do |c| %>
-  <p><%= c.user.first_name %> says:
-  <%= c.content %></p>
-  <% end %>
-</div>
+  <div id="event_div">
+    <div id="event_info">
+      Hosted By: <%= @event_info.user.first_name %><br>
+      Party Date: <%= @event_info.date.strftime("%m/%d/%Y") %><br>
+      Location: <%= @event_info.city %>, <%= @event_info.state %><br>
+      Number of People Attending: <%= @event_count %>
+    </div>
+    <div id="whos_attending">
+      <h4>Who's attending?</h4>
+      <table class="table table-striped">
+        <tr>
+          <th>Name</th>
+          <th>City</th>
+          <th>State</th>
+        </tr>
+        <% @event_attendee.each do |x|%>
+        <tr>
+          <td><%= x.user.first_name %></td>
+          <td><%= x.user.city %></td>
+          <td><%= x.user.state %></td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
 
-<div class="new_comment">
-  <p id="notice"><%= notice %></p>
-
-  <form action="/events/add_comment/<%= @event_info.id %>" method="post">
-    <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
-    <textarea name=event[comment] rows="8" cols="40"></textarea><br>
-    <input type="submit" value="Add Comment">
-  </form>
-</div>
+  <div id="comment_div">
+    <div id="event_comments">
+      <% @event_comments.each do |c| %>
+      <p><%= c.user.first_name %> (<%= c.created_at.strftime("%m-%d-%Y %H:%M")  %>) says:
+      <%= c.content %></p>
+      <% end %>
+    </div>
+    <div id="new_comment">
+      <p id="notice"><%= notice %></p>
+      <form action="/events/add_comment/<%= @event_info.id %>" method="post">
+        <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+        <textarea name=event[comment] rows="3" cols="48"></textarea><br>
+        <input type="submit" value="Add Comment">
+      </form>
+    </div>
+  </div>
 </div>

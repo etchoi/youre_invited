@@ -2,11 +2,49 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-table {
-  width:100%;
+.container {
+  margin: 0 auto;
+}
+#welcome_greeting {
+  border-bottom: 1px solid silver;
+  margin-bottom: 5%;
+}
+#out_state {
+  max-width: 45%;
+  display: inline-block;
+  margin-top: 5%;
+}
+#in_state {
+  max-width: 45%;
+  display: inline-block;
+  float: right;
+  margin-top: 5%;
+}
+#user_hosting {
+  max-width: 75%;
+  display: inline-block;
+}
+#add_event {
+  max-width: 40%;
+  display: inline-block;
+  float: right;
+}
+#add_event input {
+  margin-bottom: 1%;
 }
 
-
-// TO DO:
-// - validate date entered
-//
+#event_edit_container {
+  width: 70%;
+  margin: 0 auto;
+}
+#update_event {
+  max-width: 60%;
+}
+#edit_city {
+  width: 50%;
+  display: inline-block;
+}
+#edit_state {
+  max-width: 50px;
+  display: inline-block;
+}

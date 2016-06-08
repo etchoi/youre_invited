@@ -20,6 +20,10 @@ class Event < ActiveRecord::Base
     self.attendees.pluck(:user_id).include?(id)
   end
 
+  def number_attending?(id)
+    self.attendees(event_id:id).count
+  end
+
   # Method that prohibits input date to be in the past (envoked above)
   def good_date
     # Unless if similar to "if/not". This statement says if this comparison is false then add this message to error array

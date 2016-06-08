@@ -4,6 +4,7 @@ class SessionsController < ApplicationController
 
   def show
     @active_user = User.find_by(id:session[:active])
+    @user_parties = Event.where(user:session[:active])
     @in_state = Event.joins(:user).where(state:@active_user.state)
     @out_state = Event.where.not(state:@active_user.state)
     @attending = User.find(session[:active]).events_attending

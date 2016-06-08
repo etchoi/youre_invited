@@ -1,16 +1,21 @@
-<div class="container">
+<nav id="event_navbar" class="navbar navbar-dark bg-primary">
+  <button type="button" class="btn btn-secondary-outline"><%= link_to "Log Out", '/sessions/destroy' %></button>
+  <button type="button" class="btn btn-secondary-outline"><%= link_to "Events Dashboard", "/sessions/#{@edit_event.id}" %></button>
+</nav>
+<div id="event_edit_container">
 <h2>Edit Your Event</h2>
-<div id="add_event">
+<div id="update_event">
   <form action="/sessions/<%= @edit_event.id %>" method="post">
     <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
-    <input type="hidden" name="_method" value="put">
-    <label for="event_name">Name:</label>
-    <input type="text" name=event[name] id="event_name" value="<%= @edit_event.name %>"><br>
-    <label for="date">Date:</label>
-    <input type="date" name=event[date] id="date" value="<%= @edit_event.date %>"><br>
-    <label for="city">Location:</label>
-    <input type="text" id="city" name=event[city] value="<%= @edit_event.city %>">
-    <select name=event[state]>
+    <input class="form-control" type="hidden" name="_method" value="put">
+    <label for="event_name">Name</label>
+    <input class="form-control" type="text" name=event[name] id="event_name" value="<%= @edit_event.name %>">
+    <label for="date">Date</label>
+    <input class="form-control" type="date" name=event[date] id="date" value="<%= @edit_event.date %>">
+  <div class="form-group">
+    <label for="city">City</label><br>
+    <input class="form-control" type="text" id="edit_city" name=event[city] value="<%= @edit_event.city %>">
+    <select id="edit_state" class="form-control" name=event[state]>
       <option value="<%= @edit_event.state %>"><%= @edit_event.state %></option>
       <option value="AL">AL</option>
       <option value="AK">AK</option>
@@ -63,8 +68,9 @@
       <option value="WV">WV</option>
       <option value="WI">WI</option>
       <option value="WY">WY</option>
-    </select><br>
-    <input type="submit" value="Update Event">
+    </select>
+  </div>
+      <button type="submit" class="btn btn-secondary-outline">Update Event</button>
   </form>
 </div>
 </div>
